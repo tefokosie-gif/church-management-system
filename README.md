@@ -1,4 +1,5 @@
 # Church Management System
+**Live demo:** https://tefokosie.pythonanywhere.com (sign in with `demo` / `demo-pass-123`; all data is fictional)
 
 A web app for running a small church's administration: keep a **member register**, record **donations**, plan **events**, and **email members**, with a **dashboard** that charts giving and projects next month's total.
 
