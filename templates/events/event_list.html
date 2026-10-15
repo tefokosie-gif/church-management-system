@@ -1,0 +1,32 @@
+{% extends 'base.html' %}
+{% block title %}Events{% endblock %}
+{% block content %}
+<div class="page-head">
+  <div><h1>Events</h1><p class="subtitle">{{ upcoming|length }} upcoming</p></div>
+  <a class="btn primary" href="{% url 'events:create' %}">+ Add event</a>
+</div>
+<h2 class="section-title">Upcoming</h2>
+{% if upcoming %}
+<div class="event-grid">
+  {% for e in upcoming %}
+  <a class="card event" href="{{ e.get_absolute_url }}">
+    <div class="date-block"><span class="m">{{ e.start_time|date:"M" }}</span><span class="d">{{ e.start_time|date:"j" }}</span></div>
+    <div><h3>{{ e.name }}</h3><div class="muted">{{ e.start_time|date:"l, H:i" }}{% if e.location %} · {{ e.location }}{% endif %}</div></div>
+  </a>
+  {% endfor %}
+</div>
+{% else %}<div class="card empty" style="margin-bottom:2rem">Nothing scheduled. <a href="{% url 'events:create' %}">Add an event</a>.</div>{% endif %}
+
+{% if past %}
+<h2 class="section-title">Recent past events</h2>
+<div class="card" style="padding:.5rem">
+  <div class="table-wrap"><table>
+    <tbody>
+    {% for e in past %}
+      <tr><td><a href="{{ e.get_absolute_url }}">{{ e.name }}</a></td><td class="muted">{{ e.location|default:"—" }}</td><td class="muted" style="text-align:right">{{ e.start_time|date:"j M Y, H:i" }}</td></tr>
+    {% endfor %}
+    </tbody>
+  </table></div>
+</div>
+{% endif %}
+{% endblock %}

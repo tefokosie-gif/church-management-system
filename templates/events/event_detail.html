@@ -1,0 +1,19 @@
+{% extends 'base.html' %}
+{% block title %}{{ event.name }}{% endblock %}
+{% block content %}
+<div class="page-head">
+  <div><h1>{{ event.name }}</h1><p class="subtitle">{{ event.start_time|date:"l, j F Y · H:i" }}{% if not event.is_upcoming %} &nbsp;<span class="badge">Past</span>{% endif %}</p></div>
+  <div class="actions">
+    <a class="btn" href="{% url 'events:update' event.pk %}">Edit</a>
+    <a class="btn danger" href="{% url 'events:delete' event.pk %}">Delete</a>
+  </div>
+</div>
+<div class="card form-card">
+  <dl class="kv">
+    <dt>When</dt><dd>{{ event.start_time|date:"l, j F Y, H:i" }}</dd>
+    <dt>Where</dt><dd>{{ event.location|default:"—" }}</dd>
+    <dt>Details</dt><dd class="prose">{{ event.description|default:"—" }}</dd>
+  </dl>
+</div>
+<p style="margin-top:1.25rem"><a href="{% url 'events:list' %}">&larr; Back to events</a></p>
+{% endblock %}

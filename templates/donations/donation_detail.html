@@ -1,0 +1,20 @@
+{% extends 'base.html' %}
+{% block title %}Donation{% endblock %}
+{% block content %}
+<div class="page-head">
+  <div><h1>P {{ donation.amount|floatformat:"2g" }}</h1><p class="subtitle"><span class="badge b-{{ donation.donation_type|slugify }}">{{ donation.donation_type }}</span> &nbsp;{{ donation.date|date:"j F Y" }}</p></div>
+  <div class="actions">
+    <a class="btn" href="{% url 'donations:update' donation.pk %}">Edit</a>
+    <a class="btn danger" href="{% url 'donations:delete' donation.pk %}">Delete</a>
+  </div>
+</div>
+<div class="card form-card">
+  <dl class="kv">
+    <dt>Donor</dt><dd>{% if donation.member %}<a href="{{ donation.member.get_absolute_url }}">{{ donation.member }}</a>{% else %}Anonymous{% endif %}</dd>
+    <dt>Type</dt><dd>{{ donation.donation_type }}</dd>
+    <dt>Date</dt><dd>{{ donation.date|date:"j F Y" }}</dd>
+    <dt>Notes</dt><dd class="prose">{{ donation.notes|default:"—" }}</dd>
+  </dl>
+</div>
+<p style="margin-top:1.25rem"><a href="{% url 'donations:list' %}">&larr; Back to donations</a></p>
+{% endblock %}

@@ -1,0 +1,34 @@
+{% load static %}<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Sign in · Church Manager</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap">
+  <link rel="stylesheet" href="{% static 'css/app.css' %}">
+</head>
+<body>
+<div class="auth">
+  <div class="auth-card">
+    <div class="brand"><span class="brand-mark"><svg viewBox="0 0 24 24"><path d="M10 2h4v6h6v4h-6v10h-4V12H4V8h6z"/></svg></span><span>Church Manager</span></div>
+    <div class="card">
+      <h1 style="font-size:1.3rem;margin-bottom:.25rem">Welcome back</h1>
+      <p class="subtitle" style="margin-bottom:1.25rem">Sign in to manage members, giving and events.</p>
+      <form method="post" novalidate>
+        {% csrf_token %}
+        <input type="hidden" name="next" value="{{ next }}">
+        {% if form.errors %}<div class="alert error">Incorrect username or password. Please try again.</div>{% endif %}
+        <div class="field"><label for="{{ form.username.id_for_label }}">Username</label>{{ form.username }}</div>
+        <div class="field"><label for="{{ form.password.id_for_label }}">Password</label>{{ form.password }}</div>
+        <button class="btn primary" style="width:100%;justify-content:center" type="submit">Sign in</button>
+      </form>
+    </div>
+    {% if demo_mode %}
+      <div class="demo-hint"><strong>Demo account</strong><br>Username <code>{{ demo_username }}</code> &nbsp; Password <code>{{ demo_password }}</code><br><span class="muted">All data shown is fictional.</span></div>
+    {% endif %}
+  </div>
+</div>
+</body>
+</html>

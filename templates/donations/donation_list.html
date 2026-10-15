@@ -1,0 +1,35 @@
+{% extends 'base.html' %}
+{% block title %}Donations{% endblock %}
+{% block content %}
+<div class="page-head">
+  <div><h1>Donations</h1><p class="subtitle">{{ page_obj.paginator.count }} records · total <strong>P {{ total|floatformat:"2g" }}</strong>{% if dtype %} ({{ dtype }}){% endif %}</p></div>
+  <a class="btn primary" href="{% url 'donations:create' %}">+ Record donation</a>
+</div>
+<form class="toolbar" method="get">
+  <select class="input select" name="type" style="max-width:220px" onchange="this.form.submit()">
+    <option value="">All types</option>
+    {% for value, label in types %}<option value="{{ value }}" {% if value == dtype %}selected{% endif %}>{{ label }}</option>{% endfor %}
+  </select>
+  <noscript><button class="btn" type="submit">Filter</button></noscript>
+  {% if dtype %}<a class="btn ghost" href="{% url 'donations:list' %}">Reset</a>{% endif %}
+</form>
+<div class="card" style="padding:.5rem">
+  {% if object_list %}
+  <div class="table-wrap"><table>
+    <thead><tr><th>Date</th><th>Donor</th><th>Type</th><th style="text-align:right">Amount</th><th></th></tr></thead>
+    <tbody>
+    {% for d in object_list %}
+      <tr>
+        <td><a href="{{ d.get_absolute_url }}">{{ d.date|date:"j M Y" }}</a></td>
+        <td>{% if d.member %}<a href="{{ d.member.get_absolute_url }}">{{ d.member }}</a>{% else %}<span class="muted">Anonymous</span>{% endif %}</td>
+        <td><span class="badge b-{{ d.donation_type|slugify }}">{{ d.donation_type }}</span></td>
+        <td class="num">P {{ d.amount|floatformat:"2g" }}</td>
+        <td><div class="row-actions"><a class="btn small" href="{% url 'donations:update' d.pk %}">Edit</a></div></td>
+      </tr>
+    {% endfor %}
+    </tbody>
+  </table></div>
+  {% else %}<div class="empty">No donations recorded yet.</div>{% endif %}
+</div>
+{% include '_pagination.html' %}
+{% endblock %}

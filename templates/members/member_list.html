@@ -1,0 +1,37 @@
+{% extends 'base.html' %}
+{% block title %}Members{% endblock %}
+{% block content %}
+<div class="page-head">
+  <div><h1>Members</h1><p class="subtitle">{{ page_obj.paginator.count }} {% if q or category %}matching{% else %}on the register{% endif %}</p></div>
+  <a class="btn primary" href="{% url 'members:create' %}">+ Add member</a>
+</div>
+<form class="toolbar" method="get">
+  <input class="input" type="search" name="q" value="{{ q }}" placeholder="Search name or email…">
+  <select class="input select" name="category" style="max-width:200px">
+    <option value="">All categories</option>
+    {% for value, label in categories %}<option value="{{ value }}" {% if value == category %}selected{% endif %}>{{ label }}</option>{% endfor %}
+  </select>
+  <button class="btn" type="submit">Filter</button>
+  {% if q or category %}<a class="btn ghost" href="{% url 'members:list' %}">Reset</a>{% endif %}
+</form>
+<div class="card" style="padding:.5rem">
+  {% if object_list %}
+  <div class="table-wrap"><table>
+    <thead><tr><th>Name</th><th>Category</th><th>Email</th><th>Phone</th><th>Joined</th><th></th></tr></thead>
+    <tbody>
+    {% for m in object_list %}
+      <tr>
+        <td><a class="person" href="{{ m.get_absolute_url }}"><span class="avatar">{{ m.first_name|first|upper }}</span>{{ m.full_name }}</a></td>
+        <td><span class="badge b-{{ m.category|slugify }}">{{ m.category }}</span></td>
+        <td class="muted">{{ m.email|default:"—" }}</td>
+        <td class="muted">{{ m.phone|default:"—" }}</td>
+        <td class="muted">{{ m.joined|date:"j M Y" }}</td>
+        <td><div class="row-actions"><a class="btn small" href="{% url 'members:update' m.pk %}">Edit</a></div></td>
+      </tr>
+    {% endfor %}
+    </tbody>
+  </table></div>
+  {% else %}<div class="empty">No members found.</div>{% endif %}
+</div>
+{% include '_pagination.html' %}
+{% endblock %}
