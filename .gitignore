@@ -1,0 +1,13 @@
+   __pycache__/
+   *.pyc
+   venv/
+   .venv/
+   env/
+   church/
+   db.sqlite3
+   staticfiles/
+   .env
+   .vscode/
+   .idea/
+   .DS_Store
+   Thumbs.db
