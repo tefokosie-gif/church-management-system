@@ -22,6 +22,8 @@ urlpatterns = [
     ), name='login'),
     path('accounts/logout/', LogoutView.as_view(), name='logout'),
     path('', include('analytics.urls')),
+    path('api/', include('api.urls')),
+    path('api-auth/', include('rest_framework.urls')),
     path('members/', include('members.urls')),
     path('donations/', include('donations.urls')),
     path('events/', include('events.urls')),

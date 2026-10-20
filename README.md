@@ -12,6 +12,7 @@ Built with **Django 4.2** and **SQLite**. It began as coursework at Botswana Acc
 - **Members**: add, edit, delete, search and filter by category (Adult, Teen, Sunday School, Visitor)
 - **Donations**: record tithes and other givings, optionally linked to a member; filter by type; running total
 - **Events**: calendar of upcoming and recent events with date, time and location
+- **REST API**: JSON endpoints for members, donations, events and a summary, with search, filters and pagination (see below)
 - **Attendance**: tick who came to each event; the dashboard charts attendance over recent events and lists the most active members
 - **Messages**: email a member from the app (emails print to the terminal in development)
 - **Dashboard**: member and giving statistics, a 12-month giving chart, breakdowns by type and category, and a next-month projection using least-squares linear regression
@@ -56,6 +57,21 @@ To use the Django admin as well, create your own admin account: `python manage.p
 python manage.py test
 ```
 
+## REST API
+
+Built with Django REST Framework. Sign in first, then open `/api/` for the browsable API, or call it from a script with HTTP Basic authentication.
+
+| Endpoint | Methods | Notes |
+|----------|---------|-------|
+| `/api/members/` | GET, POST, PUT, PATCH, DELETE | `?search=`, `?category=`, `?ordering=` |
+| `/api/donations/` | GET, POST, PUT, PATCH, DELETE | `?type=`, `?member=<id>`, `?ordering=date` |
+| `/api/events/` | GET, POST, PUT, PATCH, DELETE | `?upcoming=true`; includes `attendee_count` |
+| `/api/summary/` | GET | Member count, giving totals, upcoming events |
+
+```bash
+curl -u demo:demo-pass-123 "https://tefokosie.pythonanywhere.com/api/members/?search=molefe"
+```
+
 ## Project structure
 
 | Folder | Purpose |
@@ -65,6 +81,7 @@ python manage.py test
 | `donations/` | Donation model, forms and views |
 | `events/` | Event model, forms and views |
 | `communications/` | Messages sent to members |
+| `api/` | REST API: serializers, viewsets and routes |
 | `analytics/` | Dashboard, calculations (`services.py`) and the `seed_demo` command |
 | `templates/`, `static/` | HTML templates and CSS |
 

@@ -20,12 +20,13 @@ ALLOWED_HOSTS = [
     for h in os.environ.get('DJANGO_ALLOWED_HOSTS', 'localhost,127.0.0.1').split(',')
     if h.strip()
 ]
-
+# Needed on some hosts when the site is served over HTTPS, e.g. "https://yourname.pythonanywhere.com"
 CSRF_TRUSTED_ORIGINS = [
     o.strip()
     for o in os.environ.get('DJANGO_CSRF_TRUSTED_ORIGINS', '').split(',')
     if o.strip()
 ]
+
 # --- Demo mode ----------------------------------------------------------
 # When on, the login page shows the demo credentials created by
 # `python manage.py seed_demo`. Switch off with DEMO_MODE=0 for a real deployment.
@@ -46,6 +47,8 @@ INSTALLED_APPS = [
     'events',
     'communications',
     'analytics',
+    'rest_framework',
+    'api',
 ]
 
 MIDDLEWARE = [
@@ -115,3 +118,14 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 # Emails are printed to the terminal, so messaging works with no mail server.
 EMAIL_BACKEND = os.environ.get('DJANGO_EMAIL_BACKEND', 'django.core.mail.backends.console.EmailBackend')
 DEFAULT_FROM_EMAIL = 'church@example.com'
+
+# --- REST API ------------------------------------------------------------
+REST_FRAMEWORK = {
+    'DEFAULT_AUTHENTICATION_CLASSES': [
+        'rest_framework.authentication.SessionAuthentication',  # logged-in browser users
+        'rest_framework.authentication.BasicAuthentication',    # scripts / curl (use HTTPS in production)
+    ],
+    'DEFAULT_PERMISSION_CLASSES': ['rest_framework.permissions.IsAuthenticated'],
+    'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.PageNumberPagination',
+    'PAGE_SIZE': 20,
+}
