@@ -1,0 +1,66 @@
+{% extends 'base.html' %}
+{% block title %}Attendance · {{ event.name }}{% endblock %}
+{% block content %}
+<div class="page-head">
+  <div><h1>Attendance</h1><p class="subtitle">{{ event.name }} · {{ event.start_time|date:"l, j F Y" }}</p></div>
+</div>
+
+<form method="post" id="attendance-form">
+  {% csrf_token %}
+  <div class="toolbar">
+    <input class="input" type="search" id="member-filter" placeholder="Filter members…" autocomplete="off">
+    <button class="btn" type="button" id="select-all">Select all</button>
+    <button class="btn ghost" type="button" id="clear-all">Clear</button>
+    <span class="muted" id="count-label"></span>
+  </div>
+
+  {% if members %}
+  <div class="check-grid">
+    {% for m in members %}
+    <label class="check" data-name="{{ m.full_name|lower }}">
+      <input type="checkbox" name="members" value="{{ m.pk }}" {% if m.pk in attended_ids %}checked{% endif %}>
+      <span class="avatar">{{ m.first_name|first|upper }}</span>
+      <span>{{ m.full_name }}<br><span class="muted" style="font-size:.8rem">{{ m.category }}</span></span>
+    </label>
+    {% endfor %}
+  </div>
+  {% else %}
+  <div class="card empty">There are no members yet. <a href="{% url 'members:create' %}">Add one</a>.</div>
+  {% endif %}
+
+  <div class="form-actions">
+    <button class="btn primary" type="submit">Save attendance</button>
+    <a class="btn ghost" href="{{ event.get_absolute_url }}">Cancel</a>
+  </div>
+</form>
+{% endblock %}
+
+{% block scripts %}
+<script>
+(function () {
+  const boxes = Array.from(document.querySelectorAll('.check input'));
+  const cards = Array.from(document.querySelectorAll('.check'));
+  const label = document.getElementById('count-label');
+  const filter = document.getElementById('member-filter');
+
+  function update() {
+    const n = boxes.filter(b => b.checked).length;
+    label.textContent = n + ' of ' + boxes.length + ' present';
+  }
+  document.getElementById('select-all').addEventListener('click', () => {
+    cards.forEach((c, i) => { if (!c.classList.contains('hidden')) boxes[i].checked = true; });
+    update();
+  });
+  document.getElementById('clear-all').addEventListener('click', () => {
+    boxes.forEach(b => { b.checked = false; });
+    update();
+  });
+  filter.addEventListener('input', () => {
+    const q = filter.value.trim().toLowerCase();
+    cards.forEach(c => c.classList.toggle('hidden', q !== '' && !c.dataset.name.includes(q)));
+  });
+  boxes.forEach(b => b.addEventListener('change', update));
+  update();
+})();
+</script>
+{% endblock %}

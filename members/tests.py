@@ -74,3 +74,16 @@ class MemberTests(TestCase):
         member = Member(first_name='A', last_name='B', birth_date=today.replace(year=today.year - 30) - timedelta(days=1))
         self.assertEqual(member.age, 30)
         self.assertIsNone(Member(first_name='A', last_name='B').age)
+
+
+class MemberAttendanceTests(TestCase):
+    def test_detail_shows_events_attended(self):
+        from django.utils import timezone
+        from events.models import Attendance, Event
+        get_user_model().objects.create_user('tester', password='pw-12345-xyz')
+        member = Member.objects.create(first_name='Neo', last_name='Molefe')
+        for name in ('One', 'Two'):
+            Attendance.objects.create(event=Event.objects.create(name=name, start_time=timezone.now()), member=member)
+        self.client.login(username='tester', password='pw-12345-xyz')
+        response = self.client.get(member.get_absolute_url())
+        self.assertEqual(response.context['attended_count'], 2)

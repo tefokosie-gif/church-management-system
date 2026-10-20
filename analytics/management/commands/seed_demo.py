@@ -11,7 +11,7 @@ from django.utils import timezone
 from analytics.services import month_starts
 from communications.models import Message
 from donations.models import Donation
-from events.models import Event
+from events.models import Attendance, Event
 from members.models import Member
 
 FIRST_NAMES = [
@@ -26,17 +26,16 @@ LAST_NAMES = [
 CATEGORY_WEIGHTS = [('Adult', 14), ('Teen', 4), ('Sunday School', 3), ('Visitor', 3)]
 AGE_RANGE = {'Adult': (25, 70), 'Teen': (13, 19), 'Sunday School': (5, 12), 'Visitor': (20, 60)}
 
-# (name, days from today, hour, location, description)
-EVENTS = [
-    ('Sunday Service', -21, 9, 'Main Sanctuary', 'Weekly worship service.'),
+# One-off events: (name, days from today, hour, location, description)
+OTHER_EVENTS = [
     ('Youth Fellowship Night', -14, 18, 'Fellowship Hall', 'Games, worship and a short talk for teens.'),
     ('Community Outreach Day', -6, 8, 'Town Square', 'Food parcels and clothing drive for the neighbourhood.'),
-    ('Sunday Service', 3, 9, 'Main Sanctuary', 'Weekly worship service.'),
     ("Women's Prayer Breakfast", 6, 7, 'Fellowship Hall', 'Breakfast, prayer and testimonies.'),
     ('Choir Rehearsal', 9, 17, 'Main Sanctuary', 'Rehearsal ahead of the harvest service.'),
     ('Bible Study', 13, 19, 'Room 2', 'Study group working through the book of Acts.'),
     ('Annual Harvest Thanksgiving', 30, 10, 'Main Sanctuary', 'Special thanksgiving service followed by lunch.'),
 ]
+ATTENDANCE_RATE = {'Adult': 0.75, 'Teen': 0.55, 'Sunday School': 0.6, 'Visitor': 0.2}
 
 
 class Command(BaseCommand):
@@ -101,10 +100,35 @@ class Command(BaseCommand):
                 ))
         Donation.objects.bulk_create(donations)
 
-        # --- events ---
-        for name, offset, hour, location, description in EVENTS:
-            when = timezone.make_aware(datetime.combine(today + timedelta(days=offset), time(hour, 0)))
-            Event.objects.create(name=name, start_time=when, location=location, description=description)
+        # --- events: eight past Sunday services, one coming up, plus the one-off events ---
+        def at(day, hour):
+            return timezone.make_aware(datetime.combine(day, time(hour, 0)))
+
+        last_sunday = today - timedelta(days=((today.weekday() + 1) % 7) or 7)
+        next_sunday = today + timedelta(days=(6 - today.weekday()) or 7)
+        for weeks_back in range(8):
+            Event.objects.create(name='Sunday Service', start_time=at(last_sunday - timedelta(weeks=weeks_back), 9),
+                                 location='Main Sanctuary', description='Weekly worship service.')
+        Event.objects.create(name='Sunday Service', start_time=at(next_sunday, 9),
+                             location='Main Sanctuary', description='Weekly worship service.')
+        for name, offset, hour, location, description in OTHER_EVENTS:
+            Event.objects.create(name=name, start_time=at(today + timedelta(days=offset), hour),
+                                 location=location, description=description)
+
+        # --- attendance for past events (attendance slowly trends upward) ---
+        attendances = []
+        past_events = Event.objects.filter(start_time__lt=timezone.now()).order_by('start_time')
+        for index, event in enumerate(past_events):
+            trend = 0.85 + 0.03 * index
+            for member in members:
+                rate = ATTENDANCE_RATE[member.category] * trend
+                if event.name == 'Youth Fellowship Night':
+                    rate = 0.9 if member.category == 'Teen' else 0.05
+                elif event.name == 'Community Outreach Day':
+                    rate *= 0.5
+                if rng.random() < min(rate, 0.95):
+                    attendances.append(Attendance(event=event, member=member))
+        Attendance.objects.bulk_create(attendances)
 
         # --- messages ---
         sender = User.objects.get(username=settings.DEMO_USERNAME)
@@ -120,6 +144,7 @@ class Command(BaseCommand):
 
         self.stdout.write(self.style.SUCCESS(
             f'Created {Member.objects.count()} members, {Donation.objects.count()} donations, '
-            f'{Event.objects.count()} events and {Message.objects.count()} messages.'
+            f'{Event.objects.count()} events ({Attendance.objects.count()} attendance records) '
+            f'and {Message.objects.count()} messages.'
         ))
         self.stdout.write(f'Demo login: {settings.DEMO_USERNAME} / {settings.DEMO_PASSWORD}')

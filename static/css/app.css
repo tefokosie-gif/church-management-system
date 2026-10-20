@@ -63,7 +63,7 @@ code { background: var(--accent-soft); color: var(--accent); padding: .1rem .4re
 .card { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); padding: 1.25rem 1.4rem; box-shadow: var(--shadow); }
 .card h2 { display: flex; justify-content: space-between; align-items: center; }
 .card h2 a { font-size: .85rem; font-weight: 500; }
-.stats { display: grid; grid-template-columns: repeat(auto-fit, minmax(210px, 1fr)); gap: 1rem; margin-bottom: 1rem; }
+.stats { display: grid; grid-template-columns: repeat(auto-fit, minmax(190px, 1fr)); gap: 1rem; margin-bottom: 1rem; }
 .stat-label { color: var(--muted); font-size: .85rem; font-weight: 500; }
 .stat-value { font-size: 1.75rem; font-weight: 700; letter-spacing: -.02em; margin: .15rem 0; }
 .stat-note { font-size: .82rem; color: var(--muted); }
@@ -143,6 +143,14 @@ dl.kv dd { margin: 0; font-weight: 500; }
 .date-block .d { font-size: 1.5rem; font-weight: 800; }
 .event h3 { margin: 0 0 .2rem; font-size: 1rem; }
 .section-title { font-size: .8rem; text-transform: uppercase; letter-spacing: .06em; color: var(--muted); margin: 0 0 .8rem; font-weight: 700; }
+
+/* ---------- Attendance checklist ---------- */
+.check-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(230px, 1fr)); gap: .6rem; }
+.check { display: flex; align-items: center; gap: .7rem; padding: .7rem .9rem; border: 1px solid var(--border); border-radius: 12px; background: var(--surface); cursor: pointer; }
+.check:hover { border-color: var(--accent); }
+.check input { width: 18px; height: 18px; accent-color: var(--accent); flex: none; }
+.check:has(input:checked) { background: var(--accent-soft); border-color: var(--accent); }
+.check.hidden { display: none; }
 
 /* ---------- Pagination, alerts ---------- */
 .pagination { display: flex; justify-content: space-between; align-items: center; margin-top: 1rem; color: var(--muted); font-size: .9rem; }

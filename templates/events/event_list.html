@@ -23,7 +23,7 @@
   <div class="table-wrap"><table>
     <tbody>
     {% for e in past %}
-      <tr><td><a href="{{ e.get_absolute_url }}">{{ e.name }}</a></td><td class="muted">{{ e.location|default:"—" }}</td><td class="muted" style="text-align:right">{{ e.start_time|date:"j M Y, H:i" }}</td></tr>
+      <tr><td><a href="{{ e.get_absolute_url }}">{{ e.name }}</a></td><td class="muted">{{ e.location|default:"—" }}</td><td class="muted">{% if e.attendee_count %}{{ e.attendee_count }} present{% else %}&mdash;{% endif %}</td><td class="muted" style="text-align:right">{{ e.start_time|date:"j M Y, H:i" }}</td></tr>
     {% endfor %}
     </tbody>
   </table></div>

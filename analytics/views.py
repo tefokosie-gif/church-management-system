@@ -9,7 +9,7 @@ from donations.models import Donation
 from events.models import Event
 from members.models import Member
 
-from .services import linear_forecast, month_starts, monthly_totals
+from .services import attendance_by_event, linear_forecast, month_starts, monthly_totals, top_attendees
 
 
 class DashboardView(LoginRequiredMixin, TemplateView):
@@ -37,8 +37,16 @@ class DashboardView(LoginRequiredMixin, TemplateView):
             .values_list('donation_type').annotate(total=Sum('amount'))
         )
 
+        attended = attendance_by_event()
+        attendance_values = [e.present for e in attended]
+        member_count = Member.objects.count()
+        avg_attendance = round(sum(attendance_values) / len(attendance_values)) if attendance_values else None
+
         context.update(
-            member_count=Member.objects.count(),
+            member_count=member_count,
+            avg_attendance=avg_attendance,
+            attendance_rate=round(avg_attendance / member_count * 100) if avg_attendance and member_count else None,
+            top_attendees=top_attendees(),
             this_month=this_month,
             change=change,
             year_total=Donation.objects.filter(date__year=today.year).aggregate(t=Sum('amount'))['t'] or 0,
@@ -47,6 +55,11 @@ class DashboardView(LoginRequiredMixin, TemplateView):
             upcoming_events=Event.objects.filter(start_time__gte=timezone.now())[:4],
             recent_donations=Donation.objects.select_related('member')[:6],
             chart_data={
+                'attendance': {
+                    'labels': [timezone.localtime(e.start_time).strftime('%d %b') for e in attended],
+                    'names': [e.name for e in attended],
+                    'values': attendance_values,
+                },
                 'labels': [m.strftime('%b %y') for m in months],
                 'monthly': floats,
                 'forecast_label': next_month.strftime('%b %y') if forecast else None,

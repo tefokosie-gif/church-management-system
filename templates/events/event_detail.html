@@ -15,5 +15,16 @@
     <dt>Details</dt><dd class="prose">{{ event.description|default:"—" }}</dd>
   </dl>
 </div>
+<div class="card form-card" style="margin-top:1rem">
+  <h2>Attendance <a class="btn small" href="{% url 'events:attendance' event.pk %}">{% if attendances %}Update{% else %}Record{% endif %} attendance</a></h2>
+  {% if attendances %}
+    <p class="stat-note" style="margin-bottom:.75rem">{{ attendances|length }} present</p>
+    <ul class="list">
+      {% for a in attendances %}<li><a href="{{ a.member.get_absolute_url }}">{{ a.member }}</a><span class="badge b-{{ a.member.category|slugify }}">{{ a.member.category }}</span></li>{% endfor %}
+    </ul>
+  {% else %}
+    <p class="muted">No attendance recorded yet.</p>
+  {% endif %}
+</div>
 <p style="margin-top:1.25rem"><a href="{% url 'events:list' %}">&larr; Back to events</a></p>
 {% endblock %}

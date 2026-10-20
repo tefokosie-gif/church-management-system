@@ -17,6 +17,9 @@
   <div class="card"><div class="stat-label">Given this month</div><div class="stat-value">P {{ this_month|floatformat:"0g" }}</div>
     <div class="stat-note">{% if change is not None %}<span class="{% if change >= 0 %}up{% else %}down{% endif %}">{% if change >= 0 %}&uarr;{% else %}&darr;{% endif %} {{ change }}%</span> vs last month{% else %}no data for last month{% endif %}</div></div>
   <div class="card"><div class="stat-label">Given this year</div><div class="stat-value">P {{ year_total|floatformat:"0g" }}</div><div class="stat-note">year to date</div></div>
+  <div class="card"><div class="stat-label">Average attendance</div>
+    <div class="stat-value">{% if avg_attendance is not None %}{{ avg_attendance }}{% else %}&mdash;{% endif %}</div>
+    <div class="stat-note">{% if attendance_rate is not None %}{{ attendance_rate }}% of members, last events{% else %}record attendance on an event{% endif %}</div></div>
   <div class="card"><div class="stat-label">Projected next month</div>
     <div class="stat-value">{% if forecast %}P {{ forecast.next|floatformat:"0g" }}{% else %}&mdash;{% endif %}</div>
     <div class="stat-note">{% if forecast %}linear trend, {{ next_month|date:"F Y" }}{% else %}needs two months of data{% endif %}</div></div>
@@ -38,6 +41,27 @@
       {% endfor %}
     </ul>
     {% else %}<div class="empty">No upcoming events.<br><a href="{% url 'events:create' %}">Add one</a></div>{% endif %}
+  </div>
+</div>
+
+<div class="grid-2-1">
+  <div class="card">
+    <h2>Attendance at recent events</h2>
+    {% if avg_attendance is not None %}
+      <div class="chart-box small"><canvas id="attendance-chart"></canvas></div>
+    {% else %}
+      <div class="empty">No attendance recorded yet.<br><a href="{% url 'events:list' %}">Open an event</a> and record who came.</div>
+    {% endif %}
+  </div>
+  <div class="card">
+    <h2>Most active members</h2>
+    {% if top_attendees %}
+    <ul class="list">
+      {% for m in top_attendees %}
+      <li><a href="{{ m.get_absolute_url }}">{{ m.full_name }}</a><strong>{{ m.times }} events</strong></li>
+      {% endfor %}
+    </ul>
+    {% else %}<div class="empty">Nothing to show yet.</div>{% endif %}
   </div>
 </div>
 
@@ -99,6 +123,20 @@
       data: {labels: labels, datasets: [{data: labels.map(k => obj[k]), backgroundColor: palette, borderWidth: 0}]},
       options: {responsive: true, maintainAspectRatio: false, cutout: '68%',
         plugins: {legend: {position: 'bottom', labels: {usePointStyle: true, boxWidth: 8}}}}
+    });
+  }
+  const att = document.getElementById('attendance-chart');
+  if (att && d.attendance.values.length) {
+    new Chart(att, {
+      type: 'bar',
+      data: {labels: d.attendance.labels, datasets: [{label: 'Present', data: d.attendance.values, backgroundColor: '#14b8a6', borderRadius: 6}]},
+      options: {
+        responsive: true, maintainAspectRatio: false,
+        plugins: {legend: {display: false}, tooltip: {callbacks: {
+          title: items => d.attendance.names[items[0].dataIndex] + ' · ' + items[0].label,
+          label: c => c.parsed.y + ' present'}}},
+        scales: {x: {grid: {display: false}}, y: {beginAtZero: true, grid: {color: border}, ticks: {precision: 0}}}
+      }
     });
   }
   doughnut('types-chart', d.types);

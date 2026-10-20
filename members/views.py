@@ -43,6 +43,7 @@ class MemberDetailView(LoginRequiredMixin, DetailView):
         donations = self.object.donations.all()
         context['recent_donations'] = donations[:5]
         context['total_given'] = donations.aggregate(total=Sum('amount'))['total'] or 0
+        context['attended_count'] = self.object.attendances.count()
         return context
 
 

@@ -20,6 +20,7 @@
       <dt>Phone</dt><dd>{{ member.phone|default:"—" }}</dd>
       <dt>Date of birth</dt><dd>{% if member.birth_date %}{{ member.birth_date|date:"j F Y" }} ({{ member.age }} years){% else %}—{% endif %}</dd>
       <dt>Category</dt><dd>{{ member.category }}</dd>
+      <dt>Events attended</dt><dd>{{ attended_count }}</dd>
     </dl>
   </div>
   <div class="card">

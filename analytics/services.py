@@ -2,11 +2,13 @@
 from datetime import date
 from decimal import Decimal
 
-from django.db.models import Sum
+from django.db.models import Count, Sum
 from django.db.models.functions import TruncMonth
 from django.utils import timezone
 
 from donations.models import Donation
+from events.models import Event
+from members.models import Member
 
 
 def month_starts(n, today=None):
@@ -49,3 +51,23 @@ def linear_forecast(values):
     slope = sxy / sxx
     intercept = mean_y - slope * mean_x
     return {'next': max(0.0, intercept + slope * n), 'slope': slope}
+
+
+def attendance_by_event(limit=8):
+    """Attendance counts for the most recent past events that have attendance recorded, oldest first."""
+    events = (
+        Event.objects.filter(start_time__lt=timezone.now())
+        .annotate(present=Count('attendances'))
+        .filter(present__gt=0)
+        .order_by('-start_time')[:limit]
+    )
+    return list(reversed(list(events)))
+
+
+def top_attendees(limit=5):
+    """Members who have attended the most events."""
+    return list(
+        Member.objects.annotate(times=Count('attendances'))
+        .filter(times__gt=0)
+        .order_by('-times', 'last_name', 'first_name')[:limit]
+    )

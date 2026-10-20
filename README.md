@@ -1,9 +1,10 @@
 # Church Management System
-**Live demo:** https://tefokosie.pythonanywhere.com (sign in with `demo` / `demo-pass-123`; all data is fictional)
 
 A web app for running a small church's administration: keep a **member register**, record **donations**, plan **events**, and **email members**, with a **dashboard** that charts giving and projects next month's total.
 
 Built with **Django 4.2** and **SQLite**. It began as coursework at Botswana Accountancy College and was later refactored and extended.
+
+**Live demo:** https://tefokosie.pythonanywhere.com (sign in with `demo` / `demo-pass-123`; all data is fictional)
 
 ## Features
 
@@ -11,6 +12,7 @@ Built with **Django 4.2** and **SQLite**. It began as coursework at Botswana Acc
 - **Members**: add, edit, delete, search and filter by category (Adult, Teen, Sunday School, Visitor)
 - **Donations**: record tithes and other givings, optionally linked to a member; filter by type; running total
 - **Events**: calendar of upcoming and recent events with date, time and location
+- **Attendance**: tick who came to each event; the dashboard charts attendance over recent events and lists the most active members
 - **Messages**: email a member from the app (emails print to the terminal in development)
 - **Dashboard**: member and giving statistics, a 12-month giving chart, breakdowns by type and category, and a next-month projection using least-squares linear regression
 - **Automated tests** for models, views, forms and the analytics calculations

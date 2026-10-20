@@ -59,3 +59,40 @@ class DashboardTests(TestCase):
         count = Member.objects.count()
         call_command('seed_demo', stdout=StringIO())
         self.assertEqual(Member.objects.count(), count)
+
+
+class AttendanceAnalyticsTests(TestCase):
+    @classmethod
+    def setUpTestData(cls):
+        from datetime import timedelta
+        from django.utils import timezone
+        from events.models import Attendance, Event
+
+        get_user_model().objects.create_user('tester', password='pw-12345-xyz')
+        now = timezone.now()
+        cls.members = [Member.objects.create(first_name=n, last_name='Test') for n in ('A', 'B', 'C')]
+        cls.old = Event.objects.create(name='Old', start_time=now - timedelta(days=14))
+        cls.recent = Event.objects.create(name='Recent', start_time=now - timedelta(days=7))
+        cls.empty = Event.objects.create(name='Nobody came', start_time=now - timedelta(days=3))
+        cls.future = Event.objects.create(name='Future', start_time=now + timedelta(days=3))
+        for member in cls.members[:2]:
+            Attendance.objects.create(event=cls.old, member=member)
+        Attendance.objects.create(event=cls.recent, member=cls.members[0])
+
+    def test_attendance_by_event_is_oldest_first_and_skips_empty_and_future(self):
+        from .services import attendance_by_event
+        result = attendance_by_event()
+        self.assertEqual([(e.name, e.present) for e in result], [('Old', 2), ('Recent', 1)])
+
+    def test_top_attendees_orders_by_times_attended(self):
+        from .services import top_attendees
+        result = top_attendees()
+        self.assertEqual(result[0], self.members[0])
+        self.assertEqual(result[0].times, 2)
+        self.assertNotIn(self.members[2], result)
+
+    def test_dashboard_shows_average_attendance(self):
+        self.client.login(username='tester', password='pw-12345-xyz')
+        response = self.client.get(reverse('analytics:dashboard'))
+        self.assertEqual(response.context['avg_attendance'], 2)  # (2 + 1) / 2 rounds to 2
+        self.assertEqual(response.context['chart_data']['attendance']['values'], [2, 1])
