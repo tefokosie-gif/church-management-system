@@ -10,7 +10,7 @@ from .models import Member
 class MemberTests(TestCase):
     @classmethod
     def setUpTestData(cls):
-        cls.user = get_user_model().objects.create_user('tester', password='pw-12345-xyz')
+        cls.user = get_user_model().objects.create_superuser('tester', password='pw-12345-xyz')
         cls.member = Member.objects.create(first_name='Neo', last_name='Molefe', email='neo@example.com')
 
     def login(self):
@@ -80,7 +80,7 @@ class MemberAttendanceTests(TestCase):
     def test_detail_shows_events_attended(self):
         from django.utils import timezone
         from events.models import Attendance, Event
-        get_user_model().objects.create_user('tester', password='pw-12345-xyz')
+        get_user_model().objects.create_superuser('tester', password='pw-12345-xyz')
         member = Member.objects.create(first_name='Neo', last_name='Molefe')
         for name in ('One', 'Two'):
             Attendance.objects.create(event=Event.objects.create(name=name, start_time=timezone.now()), member=member)

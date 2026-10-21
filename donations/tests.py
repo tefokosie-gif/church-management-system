@@ -12,7 +12,7 @@ from .models import Donation
 class DonationTests(TestCase):
     @classmethod
     def setUpTestData(cls):
-        get_user_model().objects.create_user('tester', password='pw-12345-xyz')
+        get_user_model().objects.create_superuser('tester', password='pw-12345-xyz')
         cls.member = Member.objects.create(first_name='Neo', last_name='Molefe')
         Donation.objects.create(donation_type='Tithes', amount=Decimal('500.00'), date='2026-01-10', member=cls.member)
         Donation.objects.create(donation_type='Other Givings', amount=Decimal('100.00'), date='2026-01-11')

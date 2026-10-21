@@ -1,0 +1,68 @@
+{% extends 'base.html' %}
+{% block title %}Reports{% endblock %}
+{% block content %}
+<div class="page-head">
+  <div><h1>Reports</h1><p class="subtitle">{{ start|date:"j M Y" }} &ndash; {{ end|date:"j M Y" }}</p></div>
+  <div class="actions">
+    <a class="btn" href="{% url 'analytics:export_members' %}">Members CSV</a>
+    <a class="btn" href="{% url 'analytics:export_donations' %}?{{ range_query }}">Donations CSV</a>
+    <a class="btn" href="{% url 'analytics:export_attendance' %}?{{ range_query }}">Attendance CSV</a>
+  </div>
+</div>
+
+<form class="toolbar" method="get">
+  <label class="muted" for="start">From</label>
+  <input class="input" type="date" id="start" name="start" value="{{ start|date:'Y-m-d' }}" style="max-width:180px">
+  <label class="muted" for="end">To</label>
+  <input class="input" type="date" id="end" name="end" value="{{ end|date:'Y-m-d' }}" style="max-width:180px">
+  <button class="btn" type="submit">Apply</button>
+  <a class="btn ghost" href="{% url 'analytics:reports' %}">Reset</a>
+</form>
+
+<div class="stats">
+  <div class="card"><div class="stat-label">Total given</div><div class="stat-value">P {{ giving.total|floatformat:"2g" }}</div><div class="stat-note">{{ giving.anonymous_pct }}% anonymous</div></div>
+  <div class="card"><div class="stat-label">Gifts</div><div class="stat-value">{{ giving.gifts }}</div><div class="stat-note">average P {{ giving.average|floatformat:"2g" }}</div></div>
+  <div class="card"><div class="stat-label">Members who gave</div><div class="stat-value">{{ giving.active_givers }}</div><div class="stat-note">{{ giving.active_pct }}% of {{ giving.member_count }} members</div></div>
+  <div class="card"><div class="stat-label">Regular givers</div><div class="stat-value">{{ giving.regular_givers }}</div><div class="stat-note">gave in {{ regular_months }}+ different months</div></div>
+</div>
+
+<div class="grid-2-1">
+  <div class="card">
+    <h2>Giving by month</h2>
+    <div class="table-wrap"><table>
+      <thead><tr><th>Month</th><th style="text-align:right">Tithes</th><th style="text-align:right">Other givings</th><th style="text-align:right">Total</th><th style="text-align:right">Gifts</th></tr></thead>
+      <tbody>
+      {% for row in giving.monthly %}
+        <tr><td>{{ row.month|date:"F Y" }}</td><td class="num">P {{ row.tithes|floatformat:"2g" }}</td><td class="num">P {{ row.other|floatformat:"2g" }}</td><td class="num">P {{ row.total|floatformat:"2g" }}</td><td class="num">{{ row.gifts }}</td></tr>
+      {% endfor %}
+      </tbody>
+      <tfoot><tr><td><strong>Total</strong></td><td></td><td></td><td class="num">P {{ giving.total|floatformat:"2g" }}</td><td class="num">{{ giving.gifts }}</td></tr></tfoot>
+    </table></div>
+  </div>
+  <div class="card">
+    <h2>Top givers</h2>
+    {% if giving.top_givers %}
+    <ul class="list">
+      {% for g in giving.top_givers %}
+      <li><div><a href="{{ g.member.get_absolute_url }}">{{ g.member.full_name }}</a><br><span class="muted">{{ g.gifts }} gift{{ g.gifts|pluralize }} · {{ g.share }}% of total</span></div><strong>P {{ g.amount|floatformat:"2g" }}</strong></li>
+      {% endfor %}
+    </ul>
+    {% else %}<div class="empty">No gifts from named members in this period.</div>{% endif %}
+  </div>
+</div>
+
+<div class="card">
+  <h2>Attendance at events in this period</h2>
+  {% if attendance.events %}
+  <div class="table-wrap"><table>
+    <thead><tr><th>Event</th><th>Date</th><th style="text-align:right">Present</th><th style="text-align:right">% of members</th></tr></thead>
+    <tbody>
+    {% for e in attendance.events %}
+      <tr><td><a href="{{ e.get_absolute_url }}">{{ e.name }}</a></td><td class="muted">{{ e.start_time|date:"j M Y" }}</td><td class="num">{{ e.present }}</td><td class="num">{{ e.rate }}%</td></tr>
+    {% endfor %}
+    </tbody>
+  </table></div>
+  <p class="footnote">Average attendance: {{ attendance.average }} (latest 10 events with attendance recorded).</p>
+  {% else %}<div class="empty">No attendance recorded for events in this period.</div>{% endif %}
+</div>
+{% endblock %}

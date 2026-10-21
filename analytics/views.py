@@ -1,6 +1,7 @@
 from datetime import date
+from urllib.parse import urlencode
 
-from django.contrib.auth.mixins import LoginRequiredMixin
+from django.contrib.auth.mixins import PermissionRequiredMixin
 from django.db.models import Count, Sum
 from django.utils import timezone
 from django.views.generic import TemplateView
@@ -9,10 +10,14 @@ from donations.models import Donation
 from events.models import Event
 from members.models import Member
 
-from .services import attendance_by_event, linear_forecast, month_starts, monthly_totals, top_attendees
+from .services import (
+    REGULAR_GIVER_MONTHS, attendance_by_event, attendance_report, giving_report, linear_forecast,
+    month_starts, monthly_totals, parse_range, top_attendees,
+)
 
 
-class DashboardView(LoginRequiredMixin, TemplateView):
+class DashboardView(PermissionRequiredMixin, TemplateView):
+    permission_required = ('members.view_member', 'donations.view_donation')
     template_name = 'analytics/dashboard.html'
 
     def get_context_data(self, **kwargs):
@@ -67,5 +72,23 @@ class DashboardView(LoginRequiredMixin, TemplateView):
                 'types': {k: float(v) for k, v in types.items()},
                 'categories': {label: categories.get(value, 0) for value, label in Member.Category.choices},
             },
+        )
+        return context
+
+
+class ReportsView(PermissionRequiredMixin, TemplateView):
+    template_name = 'analytics/reports.html'
+    permission_required = ('members.view_member', 'donations.view_donation')
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        start, end = parse_range(self.request.GET)
+        context.update(
+            start=start,
+            end=end,
+            giving=giving_report(start, end),
+            attendance=attendance_report(start, end),
+            regular_months=REGULAR_GIVER_MONTHS,
+            range_query=urlencode({'start': start.isoformat(), 'end': end.isoformat()}),
         )
         return context

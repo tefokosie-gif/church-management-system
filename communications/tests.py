@@ -11,7 +11,7 @@ from .models import Message
 class MessageTests(TestCase):
     @classmethod
     def setUpTestData(cls):
-        cls.user = get_user_model().objects.create_user('tester', password='pw-12345-xyz')
+        cls.user = get_user_model().objects.create_superuser('tester', password='pw-12345-xyz')
         cls.member = Member.objects.create(first_name='Neo', last_name='Molefe', email='neo@example.com')
         cls.no_email = Member.objects.create(first_name='Kago', last_name='Seretse')
 

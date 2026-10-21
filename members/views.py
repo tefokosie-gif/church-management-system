@@ -1,7 +1,7 @@
 from django.db.models import Q, Sum
 from django.urls import reverse_lazy
 from django.views.generic import CreateView, DeleteView, DetailView, ListView, UpdateView
-from django.contrib.auth.mixins import LoginRequiredMixin
+from django.contrib.auth.mixins import PermissionRequiredMixin
 
 from church_management.mixins import AppDeleteMixin, AppFormMixin, ListPageMixin
 
@@ -10,6 +10,7 @@ from .models import Member
 
 
 class MemberListView(ListPageMixin, ListView):
+    permission_required = 'members.view_member'
     model = Member
     template_name = 'members/member_list.html'
     paginate_by = 10
@@ -34,7 +35,8 @@ class MemberListView(ListPageMixin, ListView):
         return context
 
 
-class MemberDetailView(LoginRequiredMixin, DetailView):
+class MemberDetailView(PermissionRequiredMixin, DetailView):
+    permission_required = 'members.view_member'
     model = Member
     template_name = 'members/member_detail.html'
 
@@ -48,6 +50,7 @@ class MemberDetailView(LoginRequiredMixin, DetailView):
 
 
 class MemberCreateView(AppFormMixin, CreateView):
+    permission_required = 'members.add_member'
     model = Member
     form_class = MemberForm
     title = 'Add a member'
@@ -56,6 +59,7 @@ class MemberCreateView(AppFormMixin, CreateView):
 
 
 class MemberUpdateView(AppFormMixin, UpdateView):
+    permission_required = 'members.change_member'
     model = Member
     form_class = MemberForm
     title = 'Edit member'
@@ -64,6 +68,7 @@ class MemberUpdateView(AppFormMixin, UpdateView):
 
 
 class MemberDeleteView(AppDeleteMixin, DeleteView):
+    permission_required = 'members.delete_member'
     model = Member
     title = 'Delete member'
     success_url = reverse_lazy('members:list')

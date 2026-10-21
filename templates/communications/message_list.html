@@ -3,7 +3,7 @@
 {% block content %}
 <div class="page-head">
   <div><h1>Messages</h1><p class="subtitle">Messages sent to members by email</p></div>
-  <a class="btn primary" href="{% url 'communications:create' %}">+ New message</a>
+  {% if perms.communications.add_message %}<a class="btn primary" href="{% url 'communications:create' %}">+ New message</a>{% endif %}
 </div>
 <div class="card" style="padding:.5rem">
   {% if object_list %}

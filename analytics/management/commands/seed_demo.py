@@ -5,10 +5,12 @@ from decimal import Decimal
 
 from django.conf import settings
 from django.contrib.auth import get_user_model
+from django.contrib.auth.models import Group
 from django.core.management.base import BaseCommand
 from django.utils import timezone
 
 from analytics.services import month_starts
+from church_management.roles import STAFF, VIEWER, ensure_roles
 from communications.models import Message
 from donations.models import Donation
 from events.models import Attendance, Event
@@ -46,6 +48,22 @@ class Command(BaseCommand):
                             help='Delete existing members, donations, events and messages first.')
 
     def handle(self, *args, **options):
+        # --- demo logins: one full-access (Staff), one read-only (Viewer) ---
+        ensure_roles()
+        User = get_user_model()
+        for username, password, last_name, role in (
+            (settings.DEMO_USERNAME, settings.DEMO_PASSWORD, 'Admin', STAFF),
+            (settings.DEMO_VIEWER_USERNAME, settings.DEMO_VIEWER_PASSWORD, 'Viewer', VIEWER),
+        ):
+            user, created = User.objects.get_or_create(
+                username=username,
+                defaults={'first_name': 'Demo', 'last_name': last_name, 'email': f'{username}@example.com'},
+            )
+            if created:
+                user.set_password(password)
+                user.save()
+            user.groups.set([Group.objects.get(name=role)])
+
         if options['reset']:
             for model in (Message, Donation, Event, Member):
                 model.objects.all().delete()
@@ -55,14 +73,6 @@ class Command(BaseCommand):
 
         rng = random.Random(42)
         today = timezone.localdate()
-
-        # --- demo login ---
-        User = get_user_model()
-        if not User.objects.filter(username=settings.DEMO_USERNAME).exists():
-            User.objects.create_user(
-                settings.DEMO_USERNAME, 'demo@example.com', settings.DEMO_PASSWORD,
-                first_name='Demo', last_name='Admin',
-            )
 
         # --- members ---
         names = [(f, l) for f in FIRST_NAMES for l in LAST_NAMES]
@@ -147,4 +157,5 @@ class Command(BaseCommand):
             f'{Event.objects.count()} events ({Attendance.objects.count()} attendance records) '
             f'and {Message.objects.count()} messages.'
         ))
-        self.stdout.write(f'Demo login: {settings.DEMO_USERNAME} / {settings.DEMO_PASSWORD}')
+        self.stdout.write(f'Demo logins: {settings.DEMO_USERNAME} / {settings.DEMO_PASSWORD} (full access), '
+                          f'{settings.DEMO_VIEWER_USERNAME} / {settings.DEMO_VIEWER_PASSWORD} (read-only)')

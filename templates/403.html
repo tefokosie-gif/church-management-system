@@ -1,0 +1,9 @@
+{% extends 'base.html' %}
+{% block title %}No access{% endblock %}
+{% block content %}
+<div class="page-head"><h1>You don't have access to that</h1></div>
+<div class="card form-card">
+  <p>Your account can't do this. It may be a read-only account, or the page may be meant for another role. If you think this is a mistake, ask an administrator to update your role.</p>
+  <a class="btn primary" href="{% url 'analytics:dashboard' %}">Back to the dashboard</a>
+</div>
+{% endblock %}

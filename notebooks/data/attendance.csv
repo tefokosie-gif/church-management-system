@@ -1,0 +1,116 @@
+﻿event_id,event_name,event_date,member_id,member_name,category
+8,Sunday Service,2026-08-30,22,Tebogo Kgosi,Adult
+8,Sunday Service,2026-08-30,17,Kabelo Letsholo,Sunday School
+8,Sunday Service,2026-08-30,23,Karabo Letsholo,Adult
+8,Sunday Service,2026-08-30,10,Onalenna Letsholo,Adult
+8,Sunday Service,2026-08-30,7,Keabetswe Modise,Adult
+8,Sunday Service,2026-08-30,5,Goitseone Molefe,Adult
+8,Sunday Service,2026-08-30,3,Resego Molefe,Adult
+8,Sunday Service,2026-08-30,4,Lorato Ntsima,Adult
+8,Sunday Service,2026-08-30,20,Masego Phiri,Adult
+8,Sunday Service,2026-08-30,8,Naledi Sebego,Adult
+8,Sunday Service,2026-08-30,18,Refilwe Sebego,Adult
+7,Sunday Service,2026-09-06,12,Thato Dube,Visitor
+7,Sunday Service,2026-09-06,24,Onalenna Kgosi,Adult
+7,Sunday Service,2026-09-06,22,Tebogo Kgosi,Adult
+7,Sunday Service,2026-09-06,17,Kabelo Letsholo,Sunday School
+7,Sunday Service,2026-09-06,23,Karabo Letsholo,Adult
+7,Sunday Service,2026-09-06,10,Onalenna Letsholo,Adult
+7,Sunday Service,2026-09-06,21,Dineo Modise,Adult
+7,Sunday Service,2026-09-06,13,Atang Mokgosi,Teen
+7,Sunday Service,2026-09-06,2,Gorata Mokgosi,Teen
+7,Sunday Service,2026-09-06,5,Goitseone Molefe,Adult
+7,Sunday Service,2026-09-06,4,Lorato Ntsima,Adult
+7,Sunday Service,2026-09-06,1,Tshepo Ntsima,Teen
+7,Sunday Service,2026-09-06,8,Naledi Sebego,Adult
+7,Sunday Service,2026-09-06,18,Refilwe Sebego,Adult
+7,Sunday Service,2026-09-06,15,Tshepo Sebego,Sunday School
+7,Sunday Service,2026-09-06,19,Omphile Tau,Adult
+6,Sunday Service,2026-09-13,24,Onalenna Kgosi,Adult
+6,Sunday Service,2026-09-13,17,Kabelo Letsholo,Sunday School
+6,Sunday Service,2026-09-13,10,Onalenna Letsholo,Adult
+6,Sunday Service,2026-09-13,7,Keabetswe Modise,Adult
+6,Sunday Service,2026-09-13,6,Lorato Moeng,Teen
+6,Sunday Service,2026-09-13,5,Goitseone Molefe,Adult
+6,Sunday Service,2026-09-13,3,Resego Molefe,Adult
+6,Sunday Service,2026-09-13,4,Lorato Ntsima,Adult
+6,Sunday Service,2026-09-13,20,Masego Phiri,Adult
+6,Sunday Service,2026-09-13,8,Naledi Sebego,Adult
+6,Sunday Service,2026-09-13,18,Refilwe Sebego,Adult
+6,Sunday Service,2026-09-13,19,Omphile Tau,Adult
+5,Sunday Service,2026-09-20,9,Boitumelo Kgosi,Adult
+5,Sunday Service,2026-09-20,23,Karabo Letsholo,Adult
+5,Sunday Service,2026-09-20,10,Onalenna Letsholo,Adult
+5,Sunday Service,2026-09-20,6,Lorato Moeng,Teen
+5,Sunday Service,2026-09-20,13,Atang Mokgosi,Teen
+5,Sunday Service,2026-09-20,2,Gorata Mokgosi,Teen
+5,Sunday Service,2026-09-20,4,Lorato Ntsima,Adult
+5,Sunday Service,2026-09-20,20,Masego Phiri,Adult
+5,Sunday Service,2026-09-20,8,Naledi Sebego,Adult
+5,Sunday Service,2026-09-20,18,Refilwe Sebego,Adult
+5,Sunday Service,2026-09-20,15,Tshepo Sebego,Sunday School
+4,Sunday Service,2026-09-27,9,Boitumelo Kgosi,Adult
+4,Sunday Service,2026-09-27,24,Onalenna Kgosi,Adult
+4,Sunday Service,2026-09-27,10,Onalenna Letsholo,Adult
+4,Sunday Service,2026-09-27,21,Dineo Modise,Adult
+4,Sunday Service,2026-09-27,7,Keabetswe Modise,Adult
+4,Sunday Service,2026-09-27,2,Gorata Mokgosi,Teen
+4,Sunday Service,2026-09-27,14,Kopano Mokgosi,Visitor
+4,Sunday Service,2026-09-27,5,Goitseone Molefe,Adult
+4,Sunday Service,2026-09-27,20,Masego Phiri,Adult
+4,Sunday Service,2026-09-27,16,Goitseone Ramotswa,Visitor
+4,Sunday Service,2026-09-27,8,Naledi Sebego,Adult
+4,Sunday Service,2026-09-27,15,Tshepo Sebego,Sunday School
+3,Sunday Service,2026-10-04,12,Thato Dube,Visitor
+3,Sunday Service,2026-10-04,24,Onalenna Kgosi,Adult
+3,Sunday Service,2026-10-04,22,Tebogo Kgosi,Adult
+3,Sunday Service,2026-10-04,17,Kabelo Letsholo,Sunday School
+3,Sunday Service,2026-10-04,23,Karabo Letsholo,Adult
+3,Sunday Service,2026-10-04,10,Onalenna Letsholo,Adult
+3,Sunday Service,2026-10-04,7,Keabetswe Modise,Adult
+3,Sunday Service,2026-10-04,6,Lorato Moeng,Teen
+3,Sunday Service,2026-10-04,3,Resego Molefe,Adult
+3,Sunday Service,2026-10-04,4,Lorato Ntsima,Adult
+3,Sunday Service,2026-10-04,1,Tshepo Ntsima,Teen
+3,Sunday Service,2026-10-04,20,Masego Phiri,Adult
+3,Sunday Service,2026-10-04,16,Goitseone Ramotswa,Visitor
+3,Sunday Service,2026-10-04,11,Naledi Segwai,Visitor
+3,Sunday Service,2026-10-04,19,Omphile Tau,Adult
+10,Youth Fellowship Night,2026-10-07,6,Lorato Moeng,Teen
+10,Youth Fellowship Night,2026-10-07,13,Atang Mokgosi,Teen
+10,Youth Fellowship Night,2026-10-07,2,Gorata Mokgosi,Teen
+10,Youth Fellowship Night,2026-10-07,1,Tshepo Ntsima,Teen
+10,Youth Fellowship Night,2026-10-07,18,Refilwe Sebego,Adult
+2,Sunday Service,2026-10-11,24,Onalenna Kgosi,Adult
+2,Sunday Service,2026-10-11,22,Tebogo Kgosi,Adult
+2,Sunday Service,2026-10-11,23,Karabo Letsholo,Adult
+2,Sunday Service,2026-10-11,10,Onalenna Letsholo,Adult
+2,Sunday Service,2026-10-11,21,Dineo Modise,Adult
+2,Sunday Service,2026-10-11,7,Keabetswe Modise,Adult
+2,Sunday Service,2026-10-11,5,Goitseone Molefe,Adult
+2,Sunday Service,2026-10-11,3,Resego Molefe,Adult
+2,Sunday Service,2026-10-11,4,Lorato Ntsima,Adult
+2,Sunday Service,2026-10-11,20,Masego Phiri,Adult
+2,Sunday Service,2026-10-11,8,Naledi Sebego,Adult
+2,Sunday Service,2026-10-11,18,Refilwe Sebego,Adult
+2,Sunday Service,2026-10-11,15,Tshepo Sebego,Sunday School
+11,Community Outreach Day,2026-10-15,22,Tebogo Kgosi,Adult
+11,Community Outreach Day,2026-10-15,7,Keabetswe Modise,Adult
+11,Community Outreach Day,2026-10-15,6,Lorato Moeng,Teen
+11,Community Outreach Day,2026-10-15,2,Gorata Mokgosi,Teen
+11,Community Outreach Day,2026-10-15,18,Refilwe Sebego,Adult
+1,Sunday Service,2026-10-18,9,Boitumelo Kgosi,Adult
+1,Sunday Service,2026-10-18,24,Onalenna Kgosi,Adult
+1,Sunday Service,2026-10-18,17,Kabelo Letsholo,Sunday School
+1,Sunday Service,2026-10-18,23,Karabo Letsholo,Adult
+1,Sunday Service,2026-10-18,10,Onalenna Letsholo,Adult
+1,Sunday Service,2026-10-18,7,Keabetswe Modise,Adult
+1,Sunday Service,2026-10-18,13,Atang Mokgosi,Teen
+1,Sunday Service,2026-10-18,2,Gorata Mokgosi,Teen
+1,Sunday Service,2026-10-18,3,Resego Molefe,Adult
+1,Sunday Service,2026-10-18,4,Lorato Ntsima,Adult
+1,Sunday Service,2026-10-18,1,Tshepo Ntsima,Teen
+1,Sunday Service,2026-10-18,8,Naledi Sebego,Adult
+1,Sunday Service,2026-10-18,18,Refilwe Sebego,Adult
+1,Sunday Service,2026-10-18,11,Naledi Segwai,Visitor
+1,Sunday Service,2026-10-18,19,Omphile Tau,Adult

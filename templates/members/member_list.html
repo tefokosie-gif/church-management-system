@@ -3,7 +3,7 @@
 {% block content %}
 <div class="page-head">
   <div><h1>Members</h1><p class="subtitle">{{ page_obj.paginator.count }} {% if q or category %}matching{% else %}on the register{% endif %}</p></div>
-  <a class="btn primary" href="{% url 'members:create' %}">+ Add member</a>
+  {% if perms.members.add_member %}<a class="btn primary" href="{% url 'members:create' %}">+ Add member</a>{% endif %}
 </div>
 <form class="toolbar" method="get">
   <input class="input" type="search" name="q" value="{{ q }}" placeholder="Search name or email…">
@@ -26,7 +26,7 @@
         <td class="muted">{{ m.email|default:"—" }}</td>
         <td class="muted">{{ m.phone|default:"—" }}</td>
         <td class="muted">{{ m.joined|date:"j M Y" }}</td>
-        <td><div class="row-actions"><a class="btn small" href="{% url 'members:update' m.pk %}">Edit</a></div></td>
+        <td><div class="row-actions">{% if perms.members.change_member %}<a class="btn small" href="{% url 'members:update' m.pk %}">Edit</a>{% endif %}</div></td>
       </tr>
     {% endfor %}
     </tbody>

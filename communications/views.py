@@ -1,5 +1,5 @@
 from django.conf import settings
-from django.contrib.auth.mixins import LoginRequiredMixin
+from django.contrib.auth.mixins import PermissionRequiredMixin
 from django.core.mail import send_mail
 from django.urls import reverse_lazy
 from django.views.generic import CreateView, DetailView, ListView
@@ -11,6 +11,7 @@ from .models import Message
 
 
 class MessageListView(ListPageMixin, ListView):
+    permission_required = 'communications.view_message'
     model = Message
     template_name = 'communications/message_list.html'
     paginate_by = 12
@@ -19,12 +20,14 @@ class MessageListView(ListPageMixin, ListView):
         return super().get_queryset().select_related('recipient', 'sender')
 
 
-class MessageDetailView(LoginRequiredMixin, DetailView):
+class MessageDetailView(PermissionRequiredMixin, DetailView):
+    permission_required = 'communications.view_message'
     model = Message
     template_name = 'communications/message_detail.html'
 
 
 class MessageCreateView(AppFormMixin, CreateView):
+    permission_required = 'communications.add_message'
     model = Message
     form_class = MessageForm
     title = 'Send a message'

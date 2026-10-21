@@ -11,7 +11,7 @@ from .models import Event
 class EventTests(TestCase):
     @classmethod
     def setUpTestData(cls):
-        get_user_model().objects.create_user('tester', password='pw-12345-xyz')
+        get_user_model().objects.create_superuser('tester', password='pw-12345-xyz')
         cls.future = Event.objects.create(name='Harvest Service', start_time=timezone.now() + timedelta(days=5))
         cls.past = Event.objects.create(name='Old Picnic', start_time=timezone.now() - timedelta(days=5))
 
@@ -53,7 +53,7 @@ class AttendanceTests(TestCase):
     @classmethod
     def setUpTestData(cls):
         from members.models import Member
-        get_user_model().objects.create_user('tester', password='pw-12345-xyz')
+        get_user_model().objects.create_superuser('tester', password='pw-12345-xyz')
         cls.event = Event.objects.create(name='Sunday Service', start_time=timezone.now() - timedelta(days=1))
         cls.neo = Member.objects.create(first_name='Neo', last_name='Molefe')
         cls.kago = Member.objects.create(first_name='Kago', last_name='Seretse')

@@ -7,9 +7,9 @@
     <div><h1>{{ member.full_name }}</h1><p class="subtitle"><span class="badge b-{{ member.category|slugify }}">{{ member.category }}</span> &nbsp;Member since {{ member.joined|date:"F Y" }}</p></div>
   </div>
   <div class="actions">
-    {% if member.email %}<a class="btn" href="{% url 'communications:create' %}?recipient={{ member.pk }}">Send message</a>{% endif %}
-    <a class="btn" href="{% url 'members:update' member.pk %}">Edit</a>
-    <a class="btn danger" href="{% url 'members:delete' member.pk %}">Delete</a>
+    {% if member.email and perms.communications.add_message %}<a class="btn" href="{% url 'communications:create' %}?recipient={{ member.pk }}">Send message</a>{% endif %}
+    {% if perms.members.change_member %}<a class="btn" href="{% url 'members:update' member.pk %}">Edit</a>{% endif %}
+    {% if perms.members.delete_member %}<a class="btn danger" href="{% url 'members:delete' member.pk %}">Delete</a>{% endif %}
   </div>
 </div>
 <div class="detail-grid">

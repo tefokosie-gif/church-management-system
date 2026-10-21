@@ -1,5 +1,5 @@
 from django.contrib import messages
-from django.contrib.auth.mixins import LoginRequiredMixin
+from django.contrib.auth.mixins import PermissionRequiredMixin
 from django.db.models import Count
 from django.shortcuts import get_object_or_404, redirect, render
 from django.urls import reverse_lazy
@@ -14,7 +14,8 @@ from .forms import EventForm
 from .models import Attendance, Event
 
 
-class EventListView(LoginRequiredMixin, ListView):
+class EventListView(PermissionRequiredMixin, ListView):
+    permission_required = 'events.view_event'
     model = Event
     template_name = 'events/event_list.html'
 
@@ -30,7 +31,8 @@ class EventListView(LoginRequiredMixin, ListView):
         return context
 
 
-class EventDetailView(LoginRequiredMixin, DetailView):
+class EventDetailView(PermissionRequiredMixin, DetailView):
+    permission_required = 'events.view_event'
     model = Event
     template_name = 'events/event_detail.html'
 
@@ -40,7 +42,8 @@ class EventDetailView(LoginRequiredMixin, DetailView):
         return context
 
 
-class EventAttendanceView(LoginRequiredMixin, View):
+class EventAttendanceView(PermissionRequiredMixin, View):
+    permission_required = 'events.change_event'
     """A checklist of every member; ticked members are saved as having attended."""
 
     template_name = 'events/event_attendance.html'
@@ -68,6 +71,7 @@ class EventAttendanceView(LoginRequiredMixin, View):
 
 
 class EventCreateView(AppFormMixin, CreateView):
+    permission_required = 'events.add_event'
     model = Event
     form_class = EventForm
     title = 'Add an event'
@@ -76,6 +80,7 @@ class EventCreateView(AppFormMixin, CreateView):
 
 
 class EventUpdateView(AppFormMixin, UpdateView):
+    permission_required = 'events.change_event'
     model = Event
     form_class = EventForm
     title = 'Edit event'
@@ -84,6 +89,7 @@ class EventUpdateView(AppFormMixin, UpdateView):
 
 
 class EventDeleteView(AppDeleteMixin, DeleteView):
+    permission_required = 'events.delete_event'
     model = Event
     title = 'Delete event'
     success_url = reverse_lazy('events:list')

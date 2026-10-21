@@ -4,7 +4,7 @@ A web app for running a small church's administration: keep a **member register*
 
 Built with **Django 4.2** and **SQLite**. It began as coursework at Botswana Accountancy College and was later refactored and extended.
 
-**Live demo:** https://tefokosie.pythonanywhere.com (sign in with `demo` / `demo-pass-123`; all data is fictional)
+**Live demo:** https://tefokosie.pythonanywhere.com (full access: `demo` / `demo-pass-123`; read-only: `viewer` / `viewer-pass-123`; all data is fictional)
 
 ## Features
 
@@ -14,6 +14,9 @@ Built with **Django 4.2** and **SQLite**. It began as coursework at Botswana Acc
 - **Events**: calendar of upcoming and recent events with date, time and location
 - **REST API**: JSON endpoints for members, donations, events and a summary, with search, filters and pagination (see below)
 - **Attendance**: tick who came to each event; the dashboard charts attendance over recent events and lists the most active members
+- **Reports and CSV export**: pick a date range to see giving by month, top givers, regular givers and attendance, and download members, donations and attendance as CSV
+- **User roles**: *Staff* can change everything, *Viewer* is read-only (enforced in the pages, the buttons and the API)
+- **Analysis notebook**: a pandas notebook that analyses the exported data (trends, top givers, a projection and attendance)
 - **Messages**: email a member from the app (emails print to the terminal in development)
 - **Dashboard**: member and giving statistics, a 12-month giving chart, breakdowns by type and category, and a next-month projection using least-squares linear regression
 - **Automated tests** for models, views, forms and the analytics calculations
@@ -47,7 +50,7 @@ python manage.py seed_demo
 python manage.py runserver
 ```
 
-Open <http://127.0.0.1:8000> and sign in with **demo** / **demo-pass-123**.
+Open <http://127.0.0.1:8000> and sign in with **demo** / **demo-pass-123** (full access) or **viewer** / **viewer-pass-123** (read-only).
 
 To use the Django admin as well, create your own admin account: `python manage.py createsuperuser`, then visit `/admin/`.
 
@@ -72,16 +75,41 @@ Built with Django REST Framework. Sign in first, then open `/api/` for the brows
 curl -u demo:demo-pass-123 "https://tefokosie.pythonanywhere.com/api/members/?search=molefe"
 ```
 
+## Roles
+
+| Role | Can do |
+|------|--------|
+| **Staff** | View, add, edit and delete members, donations, events, attendance and messages |
+| **Viewer** | Read-only access to members, donations, events, the dashboard, reports and exports. Cannot read private messages |
+| **Superuser** | Everything, including the Django admin |
+
+Roles are Django groups with permissions, created automatically by `python manage.py migrate`. Give someone a role in the admin (`/admin/` > Users > choose a user > Groups). Users without a role can sign in but cannot see any data. The REST API follows the same roles.
+
+## Reports and CSV export
+
+Open **Reports** in the sidebar, choose a date range and the page shows giving by month, top givers, regular givers (gave in 3+ different months) and attendance. The buttons at the top download members, donations and attendance as CSV files. Exports guard against spreadsheet formula injection: text that starts with `=`, `+`, `-` or `@` is prefixed with an apostrophe.
+
+## Analysis notebook
+
+`notebooks/giving_analysis.ipynb` loads the exported CSVs with pandas and looks at giving trends, top and regular givers, a linear projection and attendance by member category. Sample data from the demo is in `notebooks/data/`.
+
+```bash
+pip install -r notebooks/requirements.txt
+```
+
+Then open the notebook in VS Code or Jupyter. To analyse fresh data, download the CSVs from the Reports page into `notebooks/data/`.
+
 ## Project structure
 
 | Folder | Purpose |
 |--------|---------|
-| `church_management/` | Project settings, URL routing, shared form and view helpers |
+| `church_management/` | Project settings, URL routing, user roles, shared form and view helpers |
 | `members/` | Member model, forms and views |
 | `donations/` | Donation model, forms and views |
 | `events/` | Event model, forms and views |
 | `communications/` | Messages sent to members |
 | `api/` | REST API: serializers, viewsets and routes |
+| `notebooks/` | pandas analysis notebook and sample CSV data |
 | `analytics/` | Dashboard, calculations (`services.py`) and the `seed_demo` command |
 | `templates/`, `static/` | HTML templates and CSS |
 

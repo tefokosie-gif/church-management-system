@@ -12,7 +12,7 @@ from members.models import Member
 class ApiTests(TestCase):
     @classmethod
     def setUpTestData(cls):
-        get_user_model().objects.create_user('tester', password='pw-12345-xyz')
+        get_user_model().objects.create_superuser('tester', password='pw-12345-xyz')
         cls.neo = Member.objects.create(first_name='Neo', last_name='Molefe', email='neo@example.com')
         cls.kago = Member.objects.create(first_name='Kago', last_name='Seretse', category='Teen')
         Donation.objects.create(amount=Decimal('500.00'), date=timezone.localdate(), member=cls.neo)

@@ -3,7 +3,7 @@
 {% block content %}
 <div class="page-head">
   <div><h1>Donations</h1><p class="subtitle">{{ page_obj.paginator.count }} records · total <strong>P {{ total|floatformat:"2g" }}</strong>{% if dtype %} ({{ dtype }}){% endif %}</p></div>
-  <a class="btn primary" href="{% url 'donations:create' %}">+ Record donation</a>
+  {% if perms.donations.add_donation %}<a class="btn primary" href="{% url 'donations:create' %}">+ Record donation</a>{% endif %}
 </div>
 <form class="toolbar" method="get">
   <select class="input select" name="type" style="max-width:220px" onchange="this.form.submit()">
@@ -24,7 +24,7 @@
         <td>{% if d.member %}<a href="{{ d.member.get_absolute_url }}">{{ d.member }}</a>{% else %}<span class="muted">Anonymous</span>{% endif %}</td>
         <td><span class="badge b-{{ d.donation_type|slugify }}">{{ d.donation_type }}</span></td>
         <td class="num">P {{ d.amount|floatformat:"2g" }}</td>
-        <td><div class="row-actions"><a class="btn small" href="{% url 'donations:update' d.pk %}">Edit</a></div></td>
+        <td><div class="row-actions">{% if perms.donations.change_donation %}<a class="btn small" href="{% url 'donations:update' d.pk %}">Edit</a>{% endif %}</div></td>
       </tr>
     {% endfor %}
     </tbody>

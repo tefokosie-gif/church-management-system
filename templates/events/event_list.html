@@ -3,7 +3,7 @@
 {% block content %}
 <div class="page-head">
   <div><h1>Events</h1><p class="subtitle">{{ upcoming|length }} upcoming</p></div>
-  <a class="btn primary" href="{% url 'events:create' %}">+ Add event</a>
+  {% if perms.events.add_event %}<a class="btn primary" href="{% url 'events:create' %}">+ Add event</a>{% endif %}
 </div>
 <h2 class="section-title">Upcoming</h2>
 {% if upcoming %}

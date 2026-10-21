@@ -1,10 +1,13 @@
 """Small building blocks shared by the views of every app."""
-from django.contrib.auth.mixins import LoginRequiredMixin
+from django.contrib.auth.mixins import PermissionRequiredMixin
 from django.contrib.messages.views import SuccessMessageMixin
 
+# Each view that uses these sets `permission_required`, e.g. 'members.add_member'.
+# Anonymous visitors are sent to the login page; signed-in users without the permission get a 403 page.
 
-class ListPageMixin(LoginRequiredMixin):
-    """Login required + a `querystring` (filters without ?page=) for pagination links."""
+
+class ListPageMixin(PermissionRequiredMixin):
+    """Permission check + a `querystring` (filters without ?page=) for pagination links."""
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
@@ -14,8 +17,8 @@ class ListPageMixin(LoginRequiredMixin):
         return context
 
 
-class AppFormMixin(LoginRequiredMixin, SuccessMessageMixin):
-    """Login required + shared form template + success flash message."""
+class AppFormMixin(PermissionRequiredMixin, SuccessMessageMixin):
+    """Permission check + shared form template + success flash message."""
 
     template_name = 'form.html'
     title = ''
@@ -27,8 +30,8 @@ class AppFormMixin(LoginRequiredMixin, SuccessMessageMixin):
         return context
 
 
-class AppDeleteMixin(LoginRequiredMixin, SuccessMessageMixin):
-    """Login required + shared confirmation page + success flash message."""
+class AppDeleteMixin(PermissionRequiredMixin, SuccessMessageMixin):
+    """Permission check + shared confirmation page + success flash message."""
 
     template_name = 'confirm_delete.html'
     title = ''

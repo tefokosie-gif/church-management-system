@@ -18,6 +18,8 @@ urlpatterns = [
             'demo_mode': settings.DEMO_MODE,
             'demo_username': settings.DEMO_USERNAME,
             'demo_password': settings.DEMO_PASSWORD,
+            'viewer_username': settings.DEMO_VIEWER_USERNAME,
+            'viewer_password': settings.DEMO_VIEWER_PASSWORD,
         },
     ), name='login'),
     path('accounts/logout/', LogoutView.as_view(), name='logout'),

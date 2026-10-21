@@ -33,6 +33,8 @@ CSRF_TRUSTED_ORIGINS = [
 DEMO_MODE = os.environ.get('DEMO_MODE', '1') == '1'
 DEMO_USERNAME = 'demo'
 DEMO_PASSWORD = 'demo-pass-123'
+DEMO_VIEWER_USERNAME = 'viewer'
+DEMO_VIEWER_PASSWORD = 'viewer-pass-123'
 
 # --- Applications -------------------------------------------------------
 INSTALLED_APPS = [

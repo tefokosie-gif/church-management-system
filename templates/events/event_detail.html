@@ -4,8 +4,8 @@
 <div class="page-head">
   <div><h1>{{ event.name }}</h1><p class="subtitle">{{ event.start_time|date:"l, j F Y · H:i" }}{% if not event.is_upcoming %} &nbsp;<span class="badge">Past</span>{% endif %}</p></div>
   <div class="actions">
-    <a class="btn" href="{% url 'events:update' event.pk %}">Edit</a>
-    <a class="btn danger" href="{% url 'events:delete' event.pk %}">Delete</a>
+    {% if perms.events.change_event %}<a class="btn" href="{% url 'events:update' event.pk %}">Edit</a>{% endif %}
+    {% if perms.events.delete_event %}<a class="btn danger" href="{% url 'events:delete' event.pk %}">Delete</a>{% endif %}
   </div>
 </div>
 <div class="card form-card">
@@ -16,7 +16,7 @@
   </dl>
 </div>
 <div class="card form-card" style="margin-top:1rem">
-  <h2>Attendance <a class="btn small" href="{% url 'events:attendance' event.pk %}">{% if attendances %}Update{% else %}Record{% endif %} attendance</a></h2>
+  <h2>Attendance {% if perms.events.change_event %}<a class="btn small" href="{% url 'events:attendance' event.pk %}">{% if attendances %}Update{% else %}Record{% endif %} attendance</a>{% endif %}</h2>
   {% if attendances %}
     <p class="stat-note" style="margin-bottom:.75rem">{{ attendances|length }} present</p>
     <ul class="list">

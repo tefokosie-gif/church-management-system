@@ -1,4 +1,4 @@
-from django.contrib.auth.mixins import LoginRequiredMixin
+from django.contrib.auth.mixins import PermissionRequiredMixin
 from django.db.models import Sum
 from django.urls import reverse_lazy
 from django.views.generic import CreateView, DeleteView, DetailView, ListView, UpdateView
@@ -10,6 +10,7 @@ from .models import Donation
 
 
 class DonationListView(ListPageMixin, ListView):
+    permission_required = 'donations.view_donation'
     model = Donation
     template_name = 'donations/donation_list.html'
     paginate_by = 12
@@ -28,12 +29,14 @@ class DonationListView(ListPageMixin, ListView):
         return context
 
 
-class DonationDetailView(LoginRequiredMixin, DetailView):
+class DonationDetailView(PermissionRequiredMixin, DetailView):
+    permission_required = 'donations.view_donation'
     model = Donation
     template_name = 'donations/donation_detail.html'
 
 
 class DonationCreateView(AppFormMixin, CreateView):
+    permission_required = 'donations.add_donation'
     model = Donation
     form_class = DonationForm
     title = 'Record a donation'
@@ -42,6 +45,7 @@ class DonationCreateView(AppFormMixin, CreateView):
 
 
 class DonationUpdateView(AppFormMixin, UpdateView):
+    permission_required = 'donations.change_donation'
     model = Donation
     form_class = DonationForm
     title = 'Edit donation'
@@ -50,6 +54,7 @@ class DonationUpdateView(AppFormMixin, UpdateView):
 
 
 class DonationDeleteView(AppDeleteMixin, DeleteView):
+    permission_required = 'donations.delete_donation'
     model = Donation
     title = 'Delete donation'
     success_url = reverse_lazy('donations:list')

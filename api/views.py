@@ -8,6 +8,7 @@ from donations.models import Donation
 from events.models import Event
 from members.models import Member
 
+from .permissions import CanViewSummary, ModelPermissionsWithView
 from .serializers import DonationSerializer, EventSerializer, MemberSerializer
 
 
@@ -15,6 +16,7 @@ class MemberViewSet(viewsets.ModelViewSet):
     """List, create, view, update and delete members. Supports ?search=, ?category= and ?ordering=."""
 
     queryset = Member.objects.all()
+    permission_classes = [ModelPermissionsWithView]
     serializer_class = MemberSerializer
     filter_backends = [filters.SearchFilter, filters.OrderingFilter]
     search_fields = ['first_name', 'last_name', 'email']
@@ -30,6 +32,7 @@ class DonationViewSet(viewsets.ModelViewSet):
     """Donations. Supports ?type=, ?member=<id>, ?search= (notes) and ?ordering=date or amount."""
 
     queryset = Donation.objects.select_related('member')
+    permission_classes = [ModelPermissionsWithView]
     serializer_class = DonationSerializer
     filter_backends = [filters.SearchFilter, filters.OrderingFilter]
     search_fields = ['notes']
@@ -48,7 +51,8 @@ class DonationViewSet(viewsets.ModelViewSet):
 class EventViewSet(viewsets.ModelViewSet):
     """Events with attendee counts. Supports ?upcoming=true, ?search= and ?ordering=start_time."""
 
-    queryset = Event.objects.annotate(attendee_count=Count('attendances'))
+    queryset = Event.objects.annotate(attendee_count=Count('attendances')).order_by('start_time')
+    permission_classes = [ModelPermissionsWithView]
     serializer_class = EventSerializer
     filter_backends = [filters.SearchFilter, filters.OrderingFilter]
     search_fields = ['name', 'location']
@@ -63,6 +67,7 @@ class EventViewSet(viewsets.ModelViewSet):
 
 class SummaryView(APIView):
     """Headline numbers for the dashboard."""
+    permission_classes = [CanViewSummary]
 
     def get(self, request):
         today = timezone.localdate()

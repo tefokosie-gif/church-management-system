@@ -4,8 +4,8 @@
 <div class="page-head">
   <div><h1>P {{ donation.amount|floatformat:"2g" }}</h1><p class="subtitle"><span class="badge b-{{ donation.donation_type|slugify }}">{{ donation.donation_type }}</span> &nbsp;{{ donation.date|date:"j F Y" }}</p></div>
   <div class="actions">
-    <a class="btn" href="{% url 'donations:update' donation.pk %}">Edit</a>
-    <a class="btn danger" href="{% url 'donations:delete' donation.pk %}">Delete</a>
+    {% if perms.donations.change_donation %}<a class="btn" href="{% url 'donations:update' donation.pk %}">Edit</a>{% endif %}
+    {% if perms.donations.delete_donation %}<a class="btn danger" href="{% url 'donations:delete' donation.pk %}">Delete</a>{% endif %}
   </div>
 </div>
 <div class="card form-card">
